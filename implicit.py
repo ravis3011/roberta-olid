@@ -5,12 +5,10 @@ import numpy as np
 
 
 # read the input files
-df = pd.read_csv("training-v1/offenseval-training-v1.tsv",sep='\t')
-test = pd.read_csv("trial-data/offenseval-trial.txt", sep='\t')
+df = pd.read_csv("offenseval-training-implicit.csv", sep='\t')
 
 
 df['subtask_a'] = (df['subtask_a'] == 'OFF').astype(int)
-test['subtask_a'] = (test['subtask_a'] == 'OFF').astype(int)
 
 # process the input data
 df = pd.DataFrame({
@@ -18,18 +16,10 @@ df = pd.DataFrame({
         'label': df['subtask_a']
     })
 
-test = pd.DataFrame({
-        'text': '[CLS] ' + test['tweet'].replace(r'\n', ' ', regex= True),
-        'label': test['subtask_a']
-    })
-
-
 print(df.head())
-print(test.head())
 
 # shuffle the samples
 df = df.sample(frac=1).reset_index(drop=True)
-test = test.sample(frac=1).reset_index(drop=True)
 
 # split the data into 10 equal parts
 dfs = np.array_split(df, 10)
@@ -74,13 +64,9 @@ for k in range(0, 10):
 print(results)
 
 # save the results
-outputs = open("outputs.txt", "w")
+outputs = open("outputs-implicit.txt", "w")
 outputs.write(str(results))
 
-
-# preds = open("preds.txt", "a")
-# for prediction in wrong_predictions:
-#     preds.write("text: " + prediction.text + "\n" + "label: " + str(prediction.label) + "\n\n\n")
 
 
 
